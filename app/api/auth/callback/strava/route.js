@@ -12,9 +12,8 @@ export async function GET(request) {
   const clientId = process.env.STRAVA_CLIENT_ID
   const clientSecret = process.env.STRAVA_CLIENT_SECRET
 
-  const host = request.headers.get('host')
-  const protocol = host.includes('localhost') ? 'http' : 'https'
-  const redirectUri = `${protocol}://${host}/api/auth/callback/strava`
+  const baseUrl = process.env.URL || `http://${request.headers.get('host')}`
+  const redirectUri = `${baseUrl}/api/auth/callback/strava`
 
   // Exchange code for tokens
   const tokenRes = await fetch('https://www.strava.com/oauth/token', {
