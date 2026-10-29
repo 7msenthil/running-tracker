@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Half Marathon Training - Month 2</title>
+    <style>
+        :root {
+            --dark-gray: #2c2c2c;
+            --medium-gray: #555555;
+            --light-gray: #f2f2f2;
+            --accent-gray: #e6e6e6;
+            --text-main: #000000;
+            --text-light: #777777;
+            --border-color: #d1d1d1;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        @page {
+            size: A4 portrait;
+            margin: 5mm; /* Minimum margin */
+        }
+
+        body {
+            font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            background-color: #ffffff;
+            color: var(--text-main);
+            line-height: 1.2;
+            max-width: 210mm;
+            margin: 0 auto;
+            padding: 0; /* Removing padding to maximize space */
+        }
+
+        /* Header Section */
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 5px;
+        }
+
+        .header-left .meta {
+            text-transform: uppercase;
+            font-size: 0.7rem;
+            letter-spacing: 1px;
+            color: var(--medium-gray);
+            font-weight: 600;
+            margin-bottom: 1px;
+        }
+
+        .header-left h1 {
+            font-size: 2.6rem;
+            font-weight: 900;
+            line-height: 1;
+            margin-bottom: 2px;
+        }
+
+        .header-left .dates {
+            font-size: 0.9rem;
+            color: var(--medium-gray);
+        }
+
+        .header-right {
+            text-align: right;
+        }
+
+        .header-right .peak-label {
+            text-transform: uppercase;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--medium-gray);
+            margin-bottom: -5px;
+        }
+
+        .header-right .distance {
+            font-size: 3rem;
+            font-weight: 900;
+            line-height: 1;
+        }
+
+        .header-right .record {
+            font-size: 0.8rem;
+            color: var(--medium-gray);
+        }
+
+        /* Section Titles */
+        .section-title {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            font-weight: 700;
+            color: var(--medium-gray);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 2px;
+            margin-top: 10px;
+            margin-bottom: 4px;
+        }
+
+        /* Heart Rate Targets / Summaries */
+        .hr-targets {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 6px;
+            margin-bottom: 3px;
+        }
+
+        .hr-card {
+            background-color: var(--dark-gray);
+            color: white;
+            padding: 4px 4px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 54px;
+        }
+
+        .hr-card h3 {
+            font-size: 0.55rem;
+            text-transform: uppercase;
+            margin-bottom: 0px;
+            font-weight: 700;
+        }
+
+        .hr-card .value {
+            font-size: 1.1rem;
+            font-weight: 800;
+            margin-bottom: 0px;
+        }
+
+        .hr-card p {
+            font-size: 0.55rem;
+            color: #cccccc;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .hr-card.light {
+            background-color: var(--medium-gray);
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.8rem;
+            margin-bottom: 4px;
+        }
+
+        th {
+            background-color: var(--text-main);
+            color: white;
+            text-transform: uppercase;
+            font-size: 0.7rem;
+            padding: 3px 6px;
+            text-align: center;
+        }
+        
+        td {
+            padding: 3px 6px;
+            text-align: center;
+            border-bottom: 1px solid var(--accent-gray);
+            border-right: 1px solid var(--accent-gray);
+        }
+        
+        td:first-child {
+            border-left: 1px solid var(--accent-gray);
+        }
+
+        .weekly-plan th:nth-child(2),
+        .weekly-plan td:nth-child(2),
+        .weekly-plan th:nth-child(3),
+        .weekly-plan td:nth-child(3) {
+            text-align: left;
+        }
+
+        .weekly-plan tr:nth-child(even) {
+            background-color: var(--light-gray);
+        }
+
+        .weekly-plan tr:last-child {
+            color: var(--text-main);
+        }
+
+        .weekly-plan .highlight {
+            background-color: var(--medium-gray);
+            color: white;
+            font-weight: bold;
+        }
+
+        .table-note {
+            font-size: 0.7rem;
+            color: var(--text-light);
+            margin-bottom: 5px;
+        }
+
+        /* Run Log Tracker */
+        .run-log {
+            table-layout: fixed;
+            width: 100%;
+        }
+
+        .run-log th {
+            font-size: 0.65rem;
+            padding: 3px 2px;
+            word-wrap: break-word;
+        }
+        
+        .run-log td {
+            padding: 2px 2px;
+            height: 22px; /* Extremely tight height to save space */
+            font-size: 0.75rem;
+            word-wrap: break-word;
+            overflow: hidden;
+        }
+
+        .run-log .wk-col {
+            font-weight: bold;
+            font-size: 0.85rem;
+        }
+
+        .run-log .session-name {
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 0.7rem;
+        }
+
+        .run-log tr:nth-child(4n) {
+            border-bottom: 2px solid var(--dark-gray);
+        }
+
+        .run-log .highlight-row td {
+            background-color: var(--dark-gray);
+            color: white;
+        }
+
+        .checkbox-box {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border: 1px solid var(--medium-gray);
+            vertical-align: middle;
+        }
+
+        /* Bottom Section Grid */
+        .bottom-grid {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+            gap: 10px;
+            margin-top: 5px;
+        }
+
+        /* Strength Session */
+        .strength-grid {
+            display: grid;
+            grid-template-columns: 80px 1fr;
+            gap: 6px 4px;
+            font-size: 0.7rem;
+        }
+
+        .strength-grid .label {
+            font-weight: 700;
+            color: var(--medium-gray);
+        }
+
+        /* Progress Target Table */
+        .target-table {
+            width: 100%;
+            margin-bottom: 5px;
+            font-size: 0.65rem;
+        }
+        
+        .target-table th {
+            background-color: var(--medium-gray);
+            padding: 2px 4px;
+            font-size: 0.6rem;
+        }
+        
+        .target-table td {
+            padding: 2px 4px;
+            font-size: 0.65rem;
+        }
+
+        .notes-box {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .note-line {
+            height: 16px;
+            border: 1px solid var(--accent-gray);
+            width: 100%;
+        }
+
+        /* Footer */
+        footer {
+            margin-top: 4px;
+            text-align: center;
+            font-size: 0.7rem;
+            color: var(--text-light);
+            border-top: 1px solid var(--border-color);
+            padding-top: 4px;
+        }
+
+        /* Print adjustments */
+        @media print {
+            body {
+                padding: 0;
+            }
+            .run-log .highlight-row td {
+                background-color: #e0e0e0 !important;
+                color: black !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            th {
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            .hr-card {
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            .target-table th {
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header-top">
+        <div class="header-left">
+            <div class="meta">Half Marathon Training • Month 2 of 6</div>
+            <h1>Building Your Aerobic<br>Engine</h1>
+            <div class="dates">Apr 27 – May 24, 2026</div>
+        </div>
+        <div class="header-right">
+            <div class="peak-label">Peak Long Run</div>
+            <div class="distance">9 km</div>
+            <div class="record">Week 7 • New record</div>
+        </div>
+    </div>
+
+    <div class="section-title">Baseline (Before Month 1)</div>
+    <div class="hr-targets">
+        <div class="hr-card">
+            <h3>Longest Run</h3>
+            <div class="value">6.73 km</div>
+            <p>Peak distance</p>
+        </div>
+        <div class="hr-card">
+            <h3>Avg Pace</h3>
+            <div class="value">6:54 /km</div>
+            <p>Overall moving pace</p>
+        </div>
+        <div class="hr-card">
+            <h3>Avg HR</h3>
+            <div class="value">164 bpm</div>
+            <p>Baseline average</p>
+        </div>
+        <div class="hr-card light">
+            <h3>Avg Max HR</h3>
+            <div class="value">179 bpm</div>
+            <p>Baseline average</p>
+        </div>
+        <div class="hr-card light">
+            <h3>Avg Cadence</h3>
+            <div class="value">152 spm</div>
+            <p>Steps per minute</p>
+        </div>
+        <div class="hr-card light">
+            <h3>Avg Duration</h3>
+            <div class="value">27 min</div>
+            <p>Moving time</p>
+        </div>
+    </div>
+
+    <div class="section-title">Month 1 Summary</div>
+    <div class="hr-targets">
+        <div class="hr-card">
+            <h3>Longest Run</h3>
+            <div class="value">6.06 km</div>
+            <p>Peak distance</p>
+        </div>
+        <div class="hr-card">
+            <h3>Avg Pace</h3>
+            <div class="value">9:09 /km</div>
+            <p>Overall moving pace</p>
+        </div>
+        <div class="hr-card">
+            <h3>Avg HR</h3>
+            <div class="value">142 bpm</div>
+            <p>Month 1 average</p>
+        </div>
+        <div class="hr-card light">
+            <h3>Avg Max HR</h3>
+            <div class="value">154 bpm</div>
+            <p>Month 1 average</p>
+        </div>
+        <div class="hr-card light">
+            <h3>Avg Cadence</h3>
+            <div class="value">150 spm</div>
+            <p>Steps per minute</p>
+        </div>
+        <div class="hr-card light">
+            <h3>Avg Duration</h3>
+            <div class="value">39 min</div>
+            <p>Moving time</p>
+        </div>
+    </div>
+
+    <div class="section-title">Weekly Plan</div>
+    <table class="weekly-plan">
+        <thead>
+            <tr>
+                <th>WK</th>
+                <th>DATES</th>
+                <th>THEME</th>
+                <th>EASY RUN × 2</th>
+                <th>LONG RUN</th>
+                <th>WEEKLY TOTAL</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>W5</strong></td>
+                <td>Apr 27 – May 3</td>
+                <td>Extending the Base</td>
+                <td>4.5 km each</td>
+                <td>6.0 km</td>
+                <td>15.5 km</td>
+            </tr>
+            <tr>
+                <td><strong>W6</strong></td>
+                <td>May 4 – 10</td>
+                <td>Building Confidence</td>
+                <td>5.0 km each</td>
+                <td>7.5 km</td>
+                <td>17.5 km</td>
+            </tr>
+            <tr class="highlight">
+                <td>W7</td>
+                <td>May 11 – 17</td>
+                <td>Peak Week</td>
+                <td>5.5 km each</td>
+                <td>9.0 km</td>
+                <td>20.0 km</td>
+            </tr>
+            <tr>
+                <td><strong>W8</strong></td>
+                <td>May 18 – 24</td>
+                <td>Recovery — Mandatory</td>
+                <td>4.0 km each</td>
+                <td>6.0 km</td>
+                <td>14.0 km</td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="table-note"></div>
+
+    <div class="section-title">Run Log Tracker</div>
+    <table class="run-log">
+        <colgroup>
+            <col style="width: 5%;">  <!-- Week -->
+            <col style="width: 10%;"> <!-- Session -->
+            <col style="width: 6%;">  <!-- Date -->
+            <col style="width: 6%;">  <!-- Day -->
+            <col style="width: 7%;">  <!-- Target Dist -->
+            <col style="width: 7%;">  <!-- Actual Dist -->
+            <col style="width: 8%;">  <!-- Pace -->
+            <col style="width: 6%;">  <!-- Avg HR -->
+            <col style="width: 6%;">  <!-- Max HR -->
+            <col style="width: 7%;">  <!-- Cadence -->
+            <col style="width: 6%;">  <!-- RPE -->
+            <col style="width: 5%;">  <!-- Warmup -->
+            <col style="width: 5%;">  <!-- Cool Down -->
+            <col style="width: 16%;"> <!-- Comments -->
+        </colgroup>
+        <thead>
+            <tr>
+                <th>Week</th>
+                <th>Session</th>
+                <th>Date</th>
+                <th>Day</th>
+                <th>Target Dist.</th>
+                <th>Actual Dist.</th>
+                <th>Pace</th>
+                <th>Avg HR</th>
+                <th>Max HR</th>
+                <th>Cadence</th>
+                <th>RPE<br>(1-10)</th>
+                <th>Warm<br>up</th>
+                <th>Cool<br>Down</th>
+                <th>Comments</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Week 5 -->
+            <tr>
+                <td class="wk-col" rowspan="4">W5</td>
+                <td class="session-name">EASY 1</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td><span class="checkbox-box"></span></td>
+                <td><span class="checkbox-box"></span></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="session-name">EASY 2</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td><span class="checkbox-box"></span></td>
+                <td><span class="checkbox-box"></span></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="session-name">LONG RUN</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td><span class="checkbox-box"></span></td>
+                <td><span class="checkbox-box"></span></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="session-name">STRENGTH</td>
+                <td></td>
+                <td></td>
+                <td colspan="10" style="text-align: right; font-style: italic; color: var(--medium-gray); padding-right: 20px;">Strength Session A</td>
+            </tr>
+            
+            <!-- Week 6 -->
+            <tr>
+                <td class="wk-col" rowspan="4">W6</td>
+                <td class="session-name">EASY 1</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td><span class="checkbox-box"></span></td>
+                <td><span class="checkbox-box"></span></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="session-name">EASY 2</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td><span class="checkbox-box"></span></td>
+                <td><span class="checkbox-box"></span></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="session-name">LONG RUN</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td><span class="checkbox-box"></span></td>
+                <td><span class="checkbox-box"></span></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="session-name">STRENGTH</td>
+                <td></td>
+                <td></td>
+                <td colspan="10" style="text-align: right; font-style: italic; color: var(--medium-gray); padding-right: 20px;">Strength Session A</td>
+            </tr>
+
+            <!-- Week 7 -->
+            <tr>
+                <td class="wk-col" rowspan="4">W7</td>
+                <td class="session-name">EASY 1</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td><span class="checkbox-box"></span></td>
+                <td><span class="checkbox-box"></span></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="session-name">EASY 2</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td><span class="checkbox-box"></span></td>
+                <td><span class="checkbox-box"></span></td>
+                <td></td>
+            </tr>
+            <tr class="highlight-row">
+                <td class="session-name">LONG RUN</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td><span class="checkbox-box"></span></td>
+                <td><span class="checkbox-box"></span></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="session-name">STRENGTH</td>
+                <td></td>
+                <td></td>
+                <td colspan="10" style="text-align: right; font-style: italic; color: var(--medium-gray); padding-right: 20px;">Strength Session A</td>
+            </tr>
+
+            <!-- Week 8 -->
+            <tr>
+                <td class="wk-col" rowspan="4">W8</td>
+                <td class="session-name">EASY 1</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td><span class="checkbox-box"></span></td>
+                <td><span class="checkbox-box"></span></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="session-name">EASY 2</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td><span class="checkbox-box"></span></td>
+                <td><span class="checkbox-box"></span></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="session-name">LONG RUN</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td><span class="checkbox-box"></span></td>
+                <td><span class="checkbox-box"></span></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="session-name">STRENGTH</td>
+                <td></td>
+                <td></td>
+                <td colspan="10" style="text-align: right; font-style: italic; color: var(--medium-gray); padding-right: 20px;">Strength Session A</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="bottom-grid">
+        <div>
+            <div class="section-title">Strength Session A • Once per week</div>
+            <div class="strength-grid">
+                <div class="label">Bilateral</div>
+                <div>Goblet Squat 3×12 • Romanian Deadlift 3×10 • Sumo Squat 3×12<br>Hip Thrust 3×15 • Weighted Calf Raises 3×20</div>
+                
+                <div class="label">Single-Leg</div>
+                <div>Reverse Lunges 3×10 • Step-ups 3×10 • Single-leg Calf Raise 3×15</div>
+                
+                <div class="label">Core</div>
+                <div>Dead Bug 3×8 • Plank 3×45s • Side Plank 2×30s • Bird Dog 3×8</div>
+                
+                <div class="label">Mobility</div>
+                <div>Hip Flexor Stretch • Clamshells • Ankle Circles • Seated Calf Stretch</div>
+            </div>
+        </div>
+        
+        <div>
+            <div class="section-title" style="margin-top: 0;">Progress Target</div>
+            <table class="target-table">
+                <thead>
+                    <tr>
+                        <th>Month</th>
+                        <th>Long Run</th>
+                        <th>Weekly Peak</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>M2</td>
+                        <td>6km → 9km</td>
+                        <td>20 km</td>
+                    </tr>
+                    <tr>
+                        <td>M3</td>
+                        <td>10km → 13km</td>
+                        <td>25 km</td>
+                    </tr>
+                    <tr>
+                        <td>M4</td>
+                        <td>13km → 16km</td>
+                        <td>30 km</td>
+                    </tr>
+                    <tr>
+                        <td>M5</td>
+                        <td>16km → 19km</td>
+                        <td>35 km</td>
+                    </tr>
+                    <tr>
+                        <td>M6</td>
+                        <td>Taper & Race</td>
+                        <td>-</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div class="notes-box">
+                <div class="section-title" style="margin-top: 0;">Month Notes</div>
+                <div class="note-line"></div>
+                <div class="note-line"></div>
+            </div>
+        </div>
+    </div>
+
+    
+
+</body>
+</html>

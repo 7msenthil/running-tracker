@@ -39,3 +39,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Local copy of Netlify environment variables (keys): never commit
+netlify-env.txt
